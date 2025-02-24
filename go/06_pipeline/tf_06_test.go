@@ -1,7 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestReadFile(t *testing.T) {
-
+	path_file := "../in.txt"
 }
