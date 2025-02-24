@@ -4,7 +4,7 @@ import tf_06_rewrite as tf_06
 class TestTF06(unittest.TestCase):
 
     def test_read_file(self):
-        path_to_file = "./input.txt"
+        path_to_file = "../in.txt"
         excepted = "This is a python test. This test is only a test."
         self.assertEqual(tf_06.read_file(path_to_file), excepted)
     
