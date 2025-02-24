@@ -76,12 +76,13 @@ def sort():
 #
 # The main function
 #
-read_file(sys.argv[1])
-filter_chars_and_normalize()
-scan()
-remove_stop_words()
-frequencies()
-sort()
+if __name__ == '__main__':
+    read_file(sys.argv[1])
+    filter_chars_and_normalize()
+    scan()
+    remove_stop_words()
+    frequencies()
+    sort()
 
-for tf in word_freqs[0:25]:
-    print(tf[0], '-', tf[1])
+    for tf in word_freqs[0:25]:
+        print(tf[0], '-', tf[1])
