@@ -1,5 +1,5 @@
 import unittest
-import tf_06_rewrite as tf_06
+import tf_06_currying as tf_06
 
 class TestTF06(unittest.TestCase):
 
