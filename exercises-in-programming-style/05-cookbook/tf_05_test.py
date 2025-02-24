@@ -2,54 +2,48 @@ import unittest
 import tf_05
 
 class TsetTF05(unittest.TestCase):
+
+    def setUp(self):
+        tf_05.data = []        
+        tf_05.words = []
+        tf_05.word_freqs = []
+
     def test_read_file(self):
-        tf_05.read_file('input.txt')
-        self.assertEqual(tf_05.data, list(''.join(open('input.txt').readlines())))
+        path_to_file = "../in.txt"
+        excepted = list("This is a python test. This test is only a test.")
+        tf_05.read_file(path_to_file)
+        self.assertEqual(tf_05.data, excepted)
     
     def test_filter_chars_and_normalize(self):
-        tf_05.read_file('input.txt')
+        tf_05.data = list("This is a python test. This test is only a test.")
+        excepted = list("this is a python test  this test is only a test ")
         tf_05.filter_chars_and_normalize()
-        for i in range(len(tf_05.data)):
-            if tf_05.data[i] not in tf_05.letters:
-                self.assertEqual(tf_05.data[i], ' ')
-            else:
-                self.assertEqual(tf_05.data[i], tf_05.data[i].lower())
+        self.assertEqual(tf_05.data, excepted)
     
     def test_scan(self):
-        tf_05.read_file('input.txt')
-        tf_05.filter_chars_and_normalize()
+        tf_05.data = list("this is a python test  this test is only a test ")
+        excepted = ['this', 'is', 'a', 'python', 'test', 'this', 'test', 'is', 'only', 'a', 'test']
         tf_05.scan()
-        self.assertEqual(tf_05.words, open('input.txt').read().lower().split())
+        self.assertEqual(tf_05.words, excepted)
     
     def test_remove_stop_words(self):
-        tf_05.read_file('input.txt')
-        tf_05.filter_chars_and_normalize()
-        tf_05.scan()
+        tf_05.words = ['this', 'is', 'a', 'python', 'test', 'this', 'test', 'is', 'only', 'a', 'test']
+        excepted = ['python', 'test', 'test', 'test']
         tf_05.remove_stop_words()
-        with open('../stop_words.txt') as f:
-            stop_words = f.read().split(',')
-        stop_words.extend(list(tf_05.string.ascii_lowercase))
-        for w in tf_05.words:
-            self.assertNotIn(w, stop_words)
-    
+        self.assertEqual(tf_05.words, excepted)
+
     def test_frequencies(self):
-        tf_05.read_file('input.txt')
-        tf_05.filter_chars_and_normalize()
-        tf_05.scan()
-        tf_05.remove_stop_words()
+        tf_05.words = ['python', 'test', 'test', 'test']
+        excepted = [['python', 1], ['test', 3]]
         tf_05.frequencies()
-        for w in tf_05.words:
-            self.assertIn(w, [wd[0] for wd in tf_05.word_freqs])
+        self.assertEqual(tf_05.word_freqs, excepted)
     
     def test_sort(self):
-        tf_05.read_file('input.txt')
-        tf_05.filter_chars_and_normalize()
-        tf_05.scan()
-        tf_05.remove_stop_words()
-        tf_05.frequencies()
+        tf_05.word_freqs = [['python', 1], ['test', 3]]
+        excepted = [['test', 3], ['python', 1]]
         tf_05.sort()
-        for i in range(len(tf_05.word_freqs) - 1):
-            self.assertGreaterEqual(tf_05.word_freqs[i][1], tf_05.word_freqs[i + 1][1])
+        self.assertEqual(tf_05.word_freqs, excepted)
+    
 
 if __name__ == '__main__':
     unittest.main()
