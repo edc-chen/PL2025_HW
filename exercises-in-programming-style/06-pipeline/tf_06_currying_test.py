@@ -6,18 +6,21 @@ class TestTF06(unittest.TestCase):
     def test_read_file(self):
         path_to_file = "../in.txt"
         expected = "This is a python test. This test is only a test."
+        
         result = tf_06.read_file(path_to_file)
         self.assertEqual(result, expected)
     
     def test_filter_chars_and_normalize(self):
         str_data = 'This is a python test. This test is only a test.'
         expected = 'this is a python test this test is only a test '
+        
         result = tf_06.filter_chars_and_normalize(str_data)
         self.assertEqual(result, expected)
 
     def test_scan(self):
         str_data = 'this is a python test this test is only a test '
         expected = ['this', 'is', 'a', 'python', 'test', 'this', 'test', 'is', 'only', 'a', 'test']
+        
         result = tf_06.scan(str_data)
         self.assertEqual(result, expected)        
 
@@ -25,19 +28,22 @@ class TestTF06(unittest.TestCase):
         word_list = ['this', 'is', 'a', 'python', 'test', 'this', 'test', 'is', 'only', 'a', 'test']
         expected = ['python', 'test', 'test', 'test']
         file_name = '../stop_words.txt'
+        
         result = tf_06.remove_stop_words(word_list)(file_name)
         self.assertEqual(result, expected)        
     
     def test_frequencies(self):
         word_list = ['python', 'test', 'test', 'test']
         expected = {'python': 1, 'test': 3}
+        
         result = tf_06.frequencies(word_list)        
         self.assertEqual(result, expected)        
     
     def test_sort(self):
         word_freq = {'python': 1, 'test': 3}
         expected = [('test', 3), ('python', 1)]
-        result = tf_06.sort(word_freq)
+        
+        result = tf_06.sort(word_freq)     
         self.assertEqual(result, expected)        
 
 
