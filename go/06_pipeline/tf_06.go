@@ -19,3 +19,7 @@ func RemoveStopWords(words []string) []string {
 func Frequencies(words []string) map[string]int {
 	return map[string]int{}
 }
+
+func Sort(word_freqs map[string]int) []map[string]int {
+	return []map[string]int{}
+}
