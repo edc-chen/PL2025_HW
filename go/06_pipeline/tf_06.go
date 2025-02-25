@@ -11,3 +11,11 @@ func FilterCharsAndNormalize(text string) string {
 func Scan(text string) []string {
 	return []string{}
 }
+
+func RemoveStopWords(words []string) []string {
+	return []string{}
+}
+
+func Frequencies(words []string) map[string]int {
+	return map[string]int{}
+}

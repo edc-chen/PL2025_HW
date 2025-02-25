@@ -30,12 +30,12 @@ class TestTF06(unittest.TestCase):
     
     def test_frequencies(self):
         word_list = ['python', 'test', 'test', 'test']
-        expected = {'test': 3, 'python': 1}
-        result = tf_06.frequencies(word_list)
+        expected = {'python': 1, 'test': 3}
+        result = tf_06.frequencies(word_list)        
         self.assertEqual(result, expected)        
     
     def test_sort(self):
-        word_freq = {'test': 3, 'python': 1}
+        word_freq = {'python': 1, 'test': 3}
         expected = [('test', 3), ('python', 1)]
         result = tf_06.sort(word_freq)
         self.assertEqual(result, expected)        
