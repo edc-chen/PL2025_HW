@@ -14,7 +14,7 @@ func TestReadFile(t *testing.T) {
 	if result != expected {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass ReadFile")
+	fmt.Println("pass ReadFile", result)
 }
 
 func TestFilterCharsAndNormalize(t *testing.T) {
@@ -25,7 +25,7 @@ func TestFilterCharsAndNormalize(t *testing.T) {
 	if result != expected {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass FilterCharsAndNormalize")
+	fmt.Println("pass FilterCharsAndNormalize", result)
 }
 
 func TestScan(t *testing.T) {
@@ -36,19 +36,20 @@ func TestScan(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass Scan")
+	fmt.Println("pass Scan", result)
 }
 
-// // test_remove_stop_words
-// func TestRemoveStopWords(t *testing.T) {
-// 	words := []string{"this", "is", "a", "python", "test", "this", "test", "is", "only", "a", "test"}
-// 	expected := []string{"python", "test", "test", "test"}
+func TestRemoveStopWords(t *testing.T) {
+	words := []string{"this", "is", "a", "python", "test", "this", "test", "is", "only", "a", "test"}
+	expected := []string{"python", "test", "test", "test"}
+	file_path := "../stop_words.txt"
 
-// 	result := RemoveStopWords(words)
-// 	if !reflect.DeepEqual(result, expected) {
-// 		t.Errorf("Expected %q but got %q", expected, result)
-// 	}
-// }
+	result := RemoveStopWords(file_path)(words)
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Expected %q but got %q", expected, result)
+	}
+	fmt.Println("pass RemoveStopWords", result)
+}
 
 func TestFrequencies(t *testing.T) {
 	words := []string{"python", "test", "test", "test"}
@@ -58,7 +59,7 @@ func TestFrequencies(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass Frequencies")
+	fmt.Println("pass Frequencies", result)
 }
 
 // // test_sort
