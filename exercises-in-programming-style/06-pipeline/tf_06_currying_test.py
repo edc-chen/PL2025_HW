@@ -29,7 +29,7 @@ class TestTF06(unittest.TestCase):
         expected = ['python', 'test', 'test', 'test']
         file_name = '../stop_words.txt'
         
-        result = tf_06.remove_stop_words(word_list)(file_name)
+        result = tf_06.remove_stop_words(file_name)(word_list)
         self.assertEqual(result, expected)        
     
     def test_frequencies(self):

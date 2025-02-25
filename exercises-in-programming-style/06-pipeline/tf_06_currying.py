@@ -28,18 +28,18 @@ def scan(str_data):
     """
     return str_data.split()
 
-def remove_stop_words(word_list):
+def remove_stop_words(file_name):
     """ 
     Takes a list of words and returns a copy with all stop 
     words removed
     < rewrite the remove_stop_words function to currying style >
     """
-    def remove_stop_words_inner(file_name):
-        with open(file_name) as f:
-            stop_words = f.read().split(',')
-        # add single-letter words
-        stop_words.extend(list(string.ascii_lowercase))
-        return [w for w in word_list if not w in stop_words]
+    with open(file_name) as f:
+        stop_words = f.read().split(',')
+    # add single-letter words
+    stop_words.extend(list(string.ascii_lowercase))    
+    def remove_stop_words_inner(word_list):        
+        return [w for w in word_list if not w in stop_words]    
     return remove_stop_words_inner
 
 def frequencies(word_list):
@@ -75,5 +75,5 @@ def print_all(word_freqs):
 # The main function
 #
 if __name__ == "__main__":
-    print_all(sort(frequencies(remove_stop_words(scan(filter_chars_and_normalize(read_file(sys.argv[1]))))(sys.argv[2])))[0:25])
+    print_all(sort(frequencies(remove_stop_words(sys.argv[2])(scan(filter_chars_and_normalize(read_file(sys.argv[1]))))))[0:25])
 
