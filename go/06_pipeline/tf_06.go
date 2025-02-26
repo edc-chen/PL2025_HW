@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 )
 
@@ -38,13 +39,9 @@ func RemoveStopWords(file_path string) func(words []string) []string {
 		stop_words = append(stop_words, string(ch))
 	}
 	return func(words []string) []string {
-		stop_words_map := make(map[string]struct{}, len(stop_words))
-		for _, word := range stop_words {
-			stop_words_map[word] = struct{}{}
-		}
 		result := []string{}
 		for _, w := range words {
-			if _, found := stop_words_map[w]; !found {
+			if !slices.Contains(stop_words, w) {
 				result = append(result, w)
 			}
 		}
@@ -62,6 +59,14 @@ func Frequencies(words []string) map[string]int {
 
 func Sort(word_freqs map[string]int) []map[string]int {
 	return []map[string]int{}
+}
+
+func PrintAll(word_freqs []map[string]int) {
+	for _, wf := range word_freqs {
+		for k, v := range wf {
+			fmt.Println(k, " - ", v)
+		}
+	}
 }
 
 func main() {
