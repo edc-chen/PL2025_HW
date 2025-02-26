@@ -62,13 +62,13 @@ func TestFrequencies(t *testing.T) {
 	fmt.Println("pass Frequencies", result)
 }
 
-// // test_sort
-// func TestSort(t *testing.T) {
-// 	word_freqs := map[string]int{"python": 1, "test": 3}
-// 	expected := map[string]int{"test": 3, "python": 1}
+func TestSort(t *testing.T) {
+	word_freqs := map[string]int{"python": 1, "test": 3}
+	expected := []Pair{{"test", 3}, {"python", 1}}
 
-// 	result := Sort(word_freqs)
-// 	if !reflect.DeepEqual(result, expected) {
-// 		t.Errorf("Expected %q but got %q", expected, result)
-// 	}
-// }
+	result := Sort(word_freqs)
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Expected %q but got %q", expected, result)
+	}
+	fmt.Println("pass Sort", result)
+}

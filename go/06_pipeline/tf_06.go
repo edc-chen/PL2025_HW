@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"slices"
+	"sort"
 	"strings"
 )
 
@@ -17,7 +18,7 @@ func ReadFile(file_path string) string {
 }
 
 func FilterCharsAndNormalize(text string) string {
-	re, err := regexp.Compile("[^a-zA-Z0-9_]+")
+	re, err := regexp.Compile(`[\W_]+`)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -57,19 +58,30 @@ func Frequencies(words []string) map[string]int {
 	return word_freqs
 }
 
-func Sort(word_freqs map[string]int) []map[string]int {
-	return []map[string]int{}
+type Pair struct {
+	word  string
+	count int
 }
 
-func PrintAll(word_freqs []map[string]int) {
-	for _, wf := range word_freqs {
-		for k, v := range wf {
-			fmt.Println(k, " - ", v)
-		}
+func Sort(word_freqs map[string]int) []Pair {
+	out_list := []Pair{}
+	for k, v := range word_freqs {
+		out_list = append(out_list, Pair{k, v})
+	}
+	sort.Slice(out_list, func(i, j int) bool {
+		return out_list[i].count > out_list[j].count
+	})
+
+	return out_list
+}
+
+func PrintAll(word_freqs []Pair) {
+	if len(word_freqs) > 0 {
+		fmt.Printf("%s - %d\n", word_freqs[0].word, word_freqs[0].count)
+		PrintAll(word_freqs[1:])
 	}
 }
 
 func main() {
-	words := []string{"python", "test", "test", "test"}
-	fmt.Println(Frequencies(words))
+	PrintAll(Sort(Frequencies(RemoveStopWords(os.Args[2])(Scan(FilterCharsAndNormalize(ReadFile(os.Args[1]))))))[0:25])
 }
