@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"io"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -14,7 +15,6 @@ func TestReadFile(t *testing.T) {
 	if result != expected {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass ReadFile", result)
 }
 
 func TestFilterCharsAndNormalize(t *testing.T) {
@@ -25,7 +25,6 @@ func TestFilterCharsAndNormalize(t *testing.T) {
 	if result != expected {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass FilterCharsAndNormalize", result)
 }
 
 func TestScan(t *testing.T) {
@@ -36,7 +35,6 @@ func TestScan(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass Scan", result)
 }
 
 func TestRemoveStopWords(t *testing.T) {
@@ -48,7 +46,6 @@ func TestRemoveStopWords(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass RemoveStopWords", result)
 }
 
 func TestFrequencies(t *testing.T) {
@@ -59,7 +56,6 @@ func TestFrequencies(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass Frequencies", result)
 }
 
 func TestSort(t *testing.T) {
@@ -70,5 +66,19 @@ func TestSort(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Expected %q but got %q", expected, result)
 	}
-	fmt.Println("pass Sort", result)
+}
+
+func TestPrintAll(t *testing.T) {
+	word_freqs := []Pair{{"test", 3}, {"python", 1}}
+	expected := "test - 3\npython - 1\n"
+	rescueStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+	PrintAll(word_freqs)
+	w.Close()
+	out, _ := io.ReadAll(r)
+	os.Stdout = rescueStdout
+	if string(out) != expected {
+		t.Errorf("Expected %s, got %s", expected, out)
+	}
 }

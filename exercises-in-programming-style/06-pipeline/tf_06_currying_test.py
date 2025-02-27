@@ -1,4 +1,6 @@
+import io
 import unittest
+import unittest.mock
 import tf_06_currying as tf_06
 
 class TestTF06(unittest.TestCase):
@@ -44,8 +46,15 @@ class TestTF06(unittest.TestCase):
         expected = [('test', 3), ('python', 1)]
         
         result = tf_06.sort(word_freq)     
-        self.assertEqual(result, expected)        
+        self.assertEqual(result, expected)     
 
+    @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
+    def test_print_all(self, mock_stdout):
+        word_freqs = [('test', 3), ('python', 1)]
+        expected = "test - 3\npython - 1\n"
+        tf_06.print_all(word_freqs)
+        self.assertEqual(mock_stdout.getvalue(), expected)
+            
 
 
 if __name__ == '__main__':
