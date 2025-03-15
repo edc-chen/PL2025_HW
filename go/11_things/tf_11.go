@@ -3,59 +3,80 @@ package main
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"regexp"
 	"slices"
 	"sort"
 	"strings"
 )
 
-func ReadFile(file_path string) string {
-	data, err := os.ReadFile(file_path)
+func info(v interface{}) string {
+	return reflect.TypeOf(v).String()
+}
+
+type DataStorageManager struct {
+	_data string
+}
+
+func NewDataStorageManager(filePath string) *DataStorageManager {
+	file, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return string(data)
+
+	reg, _ := regexp.Compile(`[\W_]+`)
+	processed := strings.ToLower(reg.ReplaceAllString(string(file), " "))
+
+	return &DataStorageManager{_data: processed}
 }
 
-func FilterCharsAndNormalize(text string) string {
-	re, err := regexp.Compile(`[\W_]+`)
+func (dsm *DataStorageManager) Words() []string {
+	return strings.Fields(dsm._data)
+}
+
+func (dsm *DataStorageManager) Info() string {
+	return info(dsm) + ": My major data structure is a " + info(dsm._data)
+}
+
+type StopWordManager struct {
+	_stopWords []string
+}
+
+func NewStopWordManager() *StopWordManager {
+	file, err := os.ReadFile("../stop_words.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
-	result := re.ReplaceAllString(text, " ")
-	return strings.ToLower(result)
-}
-
-func Scan(text string) []string {
-	return strings.Split(strings.TrimSpace(text), " ")
-}
-
-func RemoveStopWords(file_path string) func(words []string) []string {
-	stop_word_data, err := os.ReadFile(file_path)
-	if err != nil {
-		fmt.Println(err)
-	}
-	stop_words := strings.Split(string(stop_word_data), ",")
+	stop_words := strings.Split(string(file), ",")
 	for ch := 'a'; ch <= 'z'; ch++ {
 		stop_words = append(stop_words, string(ch))
 	}
-	return func(words []string) []string {
-		result := []string{}
-		for _, w := range words {
-			if !slices.Contains(stop_words, w) {
-				result = append(result, w)
-			}
-		}
-		return result
-	}
+
+	return &StopWordManager{_stopWords: stop_words}
 }
 
-func Frequencies(words []string) map[string]int {
-	word_freqs := make(map[string]int)
-	for _, word := range words {
-		word_freqs[word]++
-	}
-	return word_freqs
+func (swm *StopWordManager) IsStopWord(word string) bool {
+	return slices.Contains(swm._stopWords, word)
+}
+
+func (swm *StopWordManager) Info() string {
+	return info(swm) + ": My major data structure is a " + info(swm._stopWords)
+}
+
+type WordFrequencyManager struct {
+	_wordFreqs map[string]int
+}
+
+func NewWordFrequencyManager() *WordFrequencyManager {
+	return &WordFrequencyManager{_wordFreqs: make(map[string]int)}
+}
+
+func (wfm *WordFrequencyManager) IncrementCount(word string) {
+	wfm._wordFreqs[word]++
+}
+
+func (wfm *WordFrequencyManager) Info() string {
+	return info(wfm) + ": My major data structure is a " + info(wfm._wordFreqs)
 }
 
 type Pair struct {
@@ -63,25 +84,50 @@ type Pair struct {
 	count int
 }
 
-func Sort(word_freqs map[string]int) []Pair {
-	out_list := []Pair{}
-	for k, v := range word_freqs {
-		out_list = append(out_list, Pair{k, v})
-	}
-	sort.Slice(out_list, func(i, j int) bool {
-		return out_list[i].count > out_list[j].count
-	})
+func (wfm *WordFrequencyManager) Sorted() []Pair {
+	sortedList := []Pair{}
 
-	return out_list
+	for k, v := range wfm._wordFreqs {
+		sortedList = append(sortedList, Pair{k, v})
+	}
+
+	sort.Slice(sortedList, func(i, j int) bool {
+		return sortedList[i].count > sortedList[j].count
+	})
+	return sortedList
 }
 
-func PrintAll(word_freqs []Pair) {
-	if len(word_freqs) > 0 {
-		fmt.Printf("%s - %d\n", word_freqs[0].word, word_freqs[0].count)
-		PrintAll(word_freqs[1:])
+type WordFrequencyController struct {
+	_storageManager  *DataStorageManager
+	_stopWordManager *StopWordManager
+	_wordFreqManager *WordFrequencyManager
+}
+
+func NewWordFrequencyController(filePath string) *WordFrequencyController {
+	return &WordFrequencyController{
+		_storageManager:  NewDataStorageManager(filePath),
+		_stopWordManager: NewStopWordManager(),
+		_wordFreqManager: NewWordFrequencyManager(),
+	}
+}
+
+func (wfc *WordFrequencyController) Run() {
+	for _, word := range wfc._storageManager.Words() {
+		if !wfc._stopWordManager.IsStopWord(word) {
+			wfc._wordFreqManager.IncrementCount(word)
+		}
+	}
+
+	wordFreqs := wfc._wordFreqManager.Sorted()
+	for i := 0; i < 25 && i < len(wordFreqs); i++ {
+		fmt.Println(wordFreqs[i].word, "-", wordFreqs[i].count)
 	}
 }
 
 func main() {
-	PrintAll(Sort(Frequencies(RemoveStopWords(os.Args[2])(Scan(FilterCharsAndNormalize(ReadFile(os.Args[1]))))))[0:25])
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run main.go <file_path>")
+		return
+	}
+	NewWordFrequencyController(os.Args[1]).Run()
 }

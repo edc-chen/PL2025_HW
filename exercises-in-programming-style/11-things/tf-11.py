@@ -74,8 +74,12 @@ class WordFrequencyController(TFExercise):
         word_freqs = self._word_freq_manager.sorted()
         for (w, c) in word_freqs[0:25]:
             print(w, '-', c)
-
+        print(self._stop_word_manager.info())
+        print(self._storage_manager.info())
+        print(self._word_freq_manager.info())
 #
 # The main function
 #
 WordFrequencyController(sys.argv[1]).run()
+f = StopWordManager()
+print(f._stop_words)
