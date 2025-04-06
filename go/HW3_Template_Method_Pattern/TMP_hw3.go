@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-// DocumentGenerator 介面
+// DocumentGenerator interface
 type DocumentGenerator interface {
 	PrepareData() string
 	FormatContent(data string) string
 	Save(content string) string
 }
 
-// BaseGenerator 統一流程
+// BaseGenerator
 type BaseGenerator struct {
 	generator DocumentGenerator
 }
@@ -23,7 +23,7 @@ func (b *BaseGenerator) Generate() string {
 	return result
 }
 
-// TextDocument 實作
+// TextDocument Concrete implementation
 type TextDocument struct {
 	BaseGenerator
 }
@@ -40,7 +40,7 @@ func (t *TextDocument) Save(content string) string {
 	return fmt.Sprintf("Saving text document: %s", content)
 }
 
-// HTMLDocument 實作
+// HTMLDocument Concrete implementation
 type HTMLDocument struct {
 	BaseGenerator
 }
@@ -57,7 +57,7 @@ func (h *HTMLDocument) Save(content string) string {
 	return fmt.Sprintf("Saving HTML document: %s", content)
 }
 
-// 主程式入口（可作為執行示範）
+// main function
 func main() {
 	textDoc := BaseGenerator{
 		generator: &TextDocument{},
