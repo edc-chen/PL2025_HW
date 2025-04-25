@@ -31,7 +31,7 @@ sorted(+WordList, -SortedWordList)
 
         ```txt
         tmp_stop_words.txt:
-        a,is,the
+        a,is,this
         ```
 
         ```prolog
