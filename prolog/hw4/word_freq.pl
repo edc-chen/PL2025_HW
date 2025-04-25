@@ -43,7 +43,7 @@ frequencies(WordList, WordFreq) :-
     foldl(
         % Lambda 表達式，將 W 添加到累加器 Acc
         {}/[W, Acc, NewAcc]>>(
-            ( select(W-Count, Acc, Rest) ->
+            ( selectchk(W-Count, Acc, Rest) ->
                 NewCount is Count + 1,
                 NewAcc = [W-NewCount|Rest]
             ;
@@ -65,8 +65,12 @@ word_frequencies(File, StopWordsFile) :-
     remove_stop_words(WordList, StopWords, FilteredWordList),
     frequencies(FilteredWordList, WordFreq),
     sorted(WordFreq, SortedWordList),
-    % 取出排序後的前 25 筆
-    length(Top25, 25),
-    append(Top25, _, SortedWordList),
-    % 使用 lambda 直接格式化輸出，每筆以 "word - count" 形式，左右有一個空格隔開
-    maplist({}/[Word-Count]>>format("~w - ~w~n", [Word, Count]), Top25).
+    % 若筆數 ≥ 25，取前 25 筆；否則全部輸出,為了測試方便，這裡需要有變通能力
+    (   length(SortedWordList, L),
+        L >= 25 ->
+        length(TopWords, 25),
+        append(TopWords, _, SortedWordList)
+    ;   TopWords = SortedWordList
+    ),
+    % 將結果格式化輸出，每筆以 "word - count" 的格式
+    maplist({}/[Word-Count]>>format("~w - ~w~n", [Word, Count]), TopWords).
