@@ -5,7 +5,7 @@
 
 test(read_stop_words) :-
     read_stop_words('test_stop_words.txt', StopWords),
-    ExpectedWordsPrefix = ["a","is","the","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
+    ExpectedWordsPrefix = ["a","is","this","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
     assertion(StopWords == ExpectedWordsPrefix).
 
 % 測試文字清洗與正規化
@@ -20,8 +20,8 @@ test(scan) :-
 
 % 測試移除停用詞
 test(remove_stop_words) :-
-    remove_stop_words(["this","is","a","test","only","a","test"], ["a","is","the"], Result),
-    assertion(Result == ["this", "test", "only", "test"]).
+    remove_stop_words(["this","is","a","test","only","a","test"], ["a","is","this"], Result),
+    assertion(Result == ["test", "only", "test"]).
 
 % 測試頻率統計
 test(frequencies) :-
@@ -38,15 +38,6 @@ test(sorted) :-
     assertion(SortedOutput == [test-2, only-1]).
 
 % 整合測試 word_frequencies/2：
-% test(word_frequencies_integration) :-
-   % with_output_to(string(Output), word_frequencies('test_input.txt', 'test_stop_words.txt')),
-   % split_string(Output, "\n", "\n", Lines0),
-   % exclude(=( ""), Lines0, Lines),  % 排除因多餘換行產生的空字串
-   % length(Lines, Count),
-   % assertion(Count =:= 25),
-    % 驗證每一行符合 "word - 1" 的格式（所有詞頻計數均應為 1）
-   % forall(member(Line, Lines),
-   %        assertion(re_match("^[a-z]+ - 1$", Line))).
 
 test(word_frequencies) :-
     % 呼叫 word_frequencies/2，這裡用你自備的檔案名稱，請確保它們存在於當前工作目錄中

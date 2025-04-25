@@ -43,7 +43,7 @@ frequencies(WordList, WordFreq) :-
     foldl(
         % Lambda 表達式，將 W 添加到累加器 Acc
         {}/[W, Acc, NewAcc]>>(
-            ( selectchk(W-Count, Acc, Rest) ->
+            ( select(W-Count, Acc, Rest) ->
                 NewCount is Count + 1,
                 NewAcc = [W-NewCount|Rest]
             ;
@@ -54,7 +54,20 @@ frequencies(WordList, WordFreq) :-
     ).
 
 sorted(WordList, SortedWordList) :-
-    predsort({}/[Order, _-C1, _-C2]>>compare(Order, C2, C1), WordList, SortedWordList).
+    predsort(
+        {}/[Order, W1-C1, W2-C2] >> (
+            ( C1 =:= C2 ->
+                % 當頻率相同時，利用字母順序作 tie-breaker
+                compare(Order, W1, W2)
+            ;
+                % 否則，根據頻率作降序排序：較大的頻率排在前面
+                compare(Order, C2, C1)
+            )
+        ),
+        WordList,
+        SortedWordList
+    ).
+
 
 % 主函式：讀取主檔案與停用詞檔案，計算詞頻，並輸出前 25 筆結果，每行格式為 "word - count"
 word_frequencies(File, StopWordsFile) :-
