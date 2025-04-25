@@ -36,8 +36,8 @@ sorted(+WordList, -SortedWordList)
 
         ```prolog
         ?- word_frequencies('input.txt', 'tmp_stop_words.txt').
-        test: 2
-        only: 1
+        test - 2
+        only - 1
         ```
 
 - `read_stop_words(+File, -StopWords)` reads the stop words from the file and returns a list of stop words containing alphabets a-z.
