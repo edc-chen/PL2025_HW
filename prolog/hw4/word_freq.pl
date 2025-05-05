@@ -86,4 +86,4 @@ word_frequencies(File, StopWordsFile) :-
     ;   TopWords = SortedWordList
     ),
     % 將結果格式化輸出，每筆以 "word - count" 的格式
-    maplist({}/[Word-Count]>>format("~w - ~w~n", [Word, Count]), TopWords).
+    maplist({}/[Word-Count]>>format('~w - ~w~n', [Word, Count]), TopWords).
