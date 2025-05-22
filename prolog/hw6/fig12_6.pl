@@ -48,7 +48,7 @@ h( [Empty | Tiles], H)  :-
   goal( [Empty1 | GoalSquares] ), 
   totdist( Tiles, GoalSquares, D),      % Total distance from home squares
   seq( Tiles, S),                       % Sequence score
-  H is D + 3*S.
+  H is D + 3*S.                         %可修改
 
 totdist( [], [], 0).
 
